@@ -1,9 +1,11 @@
 package io.zipcoder;
 
+import java.util.stream.Stream;
+
 public class MonkeyTypewriter {
     public static void main(String[] args) {
         String introduction = "It was the best of times,\n" +
-                "it was the blurst of times,\n" +
+                "it was the worst of times,\n" +
                 "it was the age of wisdom,\n" +
                 "it was the age of foolishness,\n" +
                 "it was the epoch of belief,\n" +
@@ -24,6 +26,13 @@ public class MonkeyTypewriter {
         // For each Copier(one safe and one unsafe), create and start 5 monkeys copying the introduction to
         // A Tale Of Two Cities.
 
+        // Unsafe Monkeys
+        UnsafeCopier unsafeMonkey = new UnsafeCopier(introduction);
+        SafeCopier safeMonkey = new SafeCopier(introduction);
+        threads(unsafeMonkey);
+        threads(safeMonkey);
+
+
 
         // This wait is here because main is still a thread and we want the main method to print the finished copies
         // after enough time has passed.
@@ -34,5 +43,13 @@ public class MonkeyTypewriter {
         }
 
         // Print out the copied versions here.
+        System.out.println("THE UNSAFE MONKEY TYPED: \n\n" + unsafeMonkey.copied + "\n");
+        System.out.println("THE SAFE MONKEY TYPED: \n\n" + safeMonkey.copied);
+    }
+
+    public static void threads(Copier copier){
+
+        Stream.generate(() -> new Thread(copier)).limit(5).forEach(Thread::start);
+
     }
 }
